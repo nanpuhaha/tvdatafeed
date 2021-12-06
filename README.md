@@ -10,7 +10,7 @@ If you found the content useful and want to support my work, you can buy me a co
 This module is installed via pip:
 
 ```
-pip install --upgrade --no-cache-dir git+https://github.com/StreamAlpha/tvdatafeed.git
+pip install --upgrade --no-cache-dir git+https://github.com/nanpuhaha/tvdatafeed.git
 ```
 
 For usage instructions watch these videos-
@@ -30,7 +30,7 @@ Full tutorial
 Import the packages and initialize with your tradingview username and password. If running for first time it will prompt chromedriver download, type 'y' and press enter.
 
 ```
-from tvDatafeed import TvDatafeed, Interval, symbols
+from tradingview import TvDatafeed, Interval, symbols
 
 username = 'YourTradingViewUsername'
 password = 'YourTradingViewPassword'
@@ -164,3 +164,16 @@ Before creating an issue in this library, please follow the following steps.
 8. Use the insert code feature of github to inset code and print outputs, so that the code is displyed neat. !
 
 9. If you have multiple lines of code, use tripple grave accent ( ``` ) to insert multiple lines of code. [Example:](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks) ![image](https://user-images.githubusercontent.com/59556194/128167963-90edc379-6a15-4363-911f-5bfe1e92ef56.png)
+
+
+## Historical Data Limit
+
+| Plan | Free | Pro/Pro+ | Premium |
+|:-:|:-:|:-:|:-:|
+| Limit | 5,000 bars/candles | 10,000 bars/candles | 20,000 bars/candles |
+
+Reference: [I can't see all historical data on resolutions lower than 1 day](https://www.tradingview.com/support/solutions/43000480679-i-can-t-see-all-historical-data-on-resolutions-lower-than-1-day/)
+
+> The length of historical data for any intraday interval (i.e. chart timeframe) is **5,000 bars/candles** (for **Pro and Pro+** account holders it is doubled to **10,000 bars/candles** and for **Premium** holders it's quadrupled to **20,000**) + additionally several bars/candles back to the beginning of the week, month or year (depending on the resolution). Unfortunately, this limit cannot be extended for now due to technical reasons.
+>
+> If you change the chart interval to daily or daily-based, you will see a longer date range. We display all available data for daily-based intervals.
