@@ -165,7 +165,7 @@ class TvDatafeed:
                     '//div[@data-name="header-user-menu-sign-in"]'
                 ).click()
                 time.sleep(5)
-                
+
                 logger.debug("click email")
                 embutton = driver.find_element_by_class_name(
                     "tv-signin-dialog__toggle-email"
@@ -184,7 +184,7 @@ class TvDatafeed:
                 submit_button = driver.find_element_by_class_name("tv-button--loader")
                 submit_button.click()
                 time.sleep(5)
-                
+
             except Exception as e:
                 logger.error(f"{e}, {e.args}")
                 logger.error(
@@ -285,13 +285,12 @@ class TvDatafeed:
             for entry in logs:
                 log = json.loads(entry["message"])["message"]
 
-                if "Network.webSocketFrameSent" in log["method"]:
-                    if (
-                        "set_auth_token" in log["params"]["response"]["payloadData"]
-                        and "unauthorized_user_token"
-                        not in log["params"]["response"]["payloadData"]
-                    ):
-                        yield log
+                if "Network.webSocketFrameSent" in log["method"] and (
+                    "set_auth_token" in log["params"]["response"]["payloadData"]
+                    and "unauthorized_user_token"
+                    not in log["params"]["response"]["payloadData"]
+                ):
+                    yield log
 
         logs = driver.get_log("performance")
         events = process_browser_logs_for_network_events(logs)
@@ -315,8 +314,8 @@ class TvDatafeed:
     @staticmethod
     def __filter_raw_message(text):
         try:
-            found = re.search('"m":"(.+?)",', text).group(1)
-            found2 = re.search('"p":(.+?"}"])}', text).group(1)
+            found = re.search('"m":"(.+?)",', text)[1]
+            found2 = re.search('"p":(.+?"}"])}', text)[1]
 
             return found, found2
         except AttributeError:
@@ -326,19 +325,19 @@ class TvDatafeed:
     def __generate_session():
         stringLength = 12
         letters = string.ascii_lowercase
-        random_string = "".join(random.choice(letters) for i in range(stringLength))
-        return "qs_" + random_string
+        random_string = "".join(random.choice(letters) for _ in range(stringLength))
+        return f"qs_{random_string}"
 
     @staticmethod
     def __generate_chart_session():
         stringLength = 12
         letters = string.ascii_lowercase
-        random_string = "".join(random.choice(letters) for i in range(stringLength))
-        return "cs_" + random_string
+        random_string = "".join(random.choice(letters) for _ in range(stringLength))
+        return f"cs_{random_string}"
 
     @staticmethod
     def __prepend_header(st):
-        return "~m~" + str(len(st)) + "~m~" + st
+        return f"~m~{len(st)}~m~" + st
 
     @staticmethod
     def __construct_message(func, param_list):
@@ -482,16 +481,14 @@ class TvDatafeed:
                 logger.error(e)
                 break
 
-            # heartbeat
-            m = re.fullmatch(r'(~m~\d+~m~~h~\d+)', result)
-            if m:
+            if m := re.fullmatch(r'(~m~\d+~m~~h~\d+)', result):
                 if show_process:
                     print(f"heartbeat {m.group()}")
-                    
+
                 heartbeat_count += 1
                 if heartbeat_count >= max_heartbeat:
                     break
-                    
+
                 self.__send_raw_message(m.group())
 
             # request more historical data
